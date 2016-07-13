@@ -1,0 +1,149 @@
+---
+- name: Pre-requisites
+  hosts: dev_box
+  tags: always
+
+  tasks:
+    - name: Installing git
+      become: yes
+      apt: name=git update_cache=yes
+
+    - name: Cloning dotfiles repo github.com/pratz/dotfiles.git to user's home directory
+      git: repo=https://github.com/pratz/dotfiles.git dest="{{ ansible_env.HOME }}/dotfiles" update=no
+
+    - name: Creating symbolic link to git dotfiles
+      file: src="{{ ansible_env.HOME }}/dotfiles/git/{{ item.src }}" dest="{{ ansible_env.HOME }}/{{ item.dest }}" state=link
+      with_items:
+        - { src: '.gitconfig', dest: '.gitconfig' }
+        - { src: '.gitignore', dest: '.gitignore' }
+
+
+- name: ZSH shell
+  hosts: dev_box
+  tags:
+    - zsh
+
+  tasks:
+    - name: Installing zsh shell
+      become: yes
+      apt: name=zsh update_cache=yes
+
+    - name: Cloning zsh configuration framework ZIM github.com/Eriner/zim.git to user's home directory
+      git: repo=https://github.com/Eriner/zim.git dest="{{ ansible_env.HOME }}/.zim" recursive=yes update=no
+
+    - name: Creating symbolic link to zsh dotfiles
+      file: src="{{ ansible_env.HOME }}/dotfiles/zsh/{{ item.src }}" dest="{{ ansible_env.HOME }}/{{ item.dest }}" state=link
+      with_items:
+        - { src: '.zshrc', dest: '.zshrc' }
+        - { src: '.zimrc', dest: '.zimrc' }
+        - { src: 'git-prompt.sh', dest: 'git-prompt.sh' }
+
+
+- name: Tmux
+  hosts: dev_box
+  tags:
+    - tmux
+
+  tasks:
+    - name: Installing tmux
+      become: yes
+      apt: name=tmux update_cache=yes
+
+    - name: Creating symbolic link to tmux dotfiles
+      file: src="{{ ansible_env.HOME }}/dotfiles/tmux/{{ item.src }}" dest="{{ ansible_env.HOME }}/{{ item.dest }}" state=link
+      with_items:
+        - { src: '.tmux.conf', dest: '.tmux.conf' }
+
+
+- name: NeoVim
+  hosts: dev_box
+  tags:
+    - neovim
+
+  tasks:
+    - name: Adding neovim apt repository
+      become: yes
+      apt_repository: repo=ppa:neovim-ppa/unstable
+
+    - name: Installing neovim
+      become: yes
+      apt: name={{ item }} update_cache=yes
+      with_items:
+        - software-properties-common
+        - python-dev
+        - python-pip
+        - python3-dev
+        - python3-pip
+        - xsel
+        - ctags
+        - neovim
+
+    - name: Creating config directory if it does not exists
+      file: path="{{ ansible_env.HOME }}/.config/nvim" state=directory
+
+    - name: Creating symbolic link to neovim dotfiles
+      file: src="{{ ansible_env.HOME }}/dotfiles/neovim/{{ item.src }}" dest="{{ ansible_env.HOME }}/.config/nvim/{{ item.dest }}" state=link
+      with_items:
+        - { src: 'init.vim', dest: 'init.vim' }
+
+    - name: Creating autoload directory neovim plugins
+      file: path="{{ ansible_env.HOME }}/.config/nvim/autoload" state=directory
+
+    - name: Downloading neovim plugins manager VimPlug github.com/junegunn/vim-plug.git
+      get_url: url=https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim dest="{{ ansible_env.HOME }}/.config/nvim/autoload/plug.vim"
+
+    - name: Installing neovim python package
+      pip: name=neovim executable=pip3
+
+    - name: Configuring Deoplete
+      shell: /usr/bin/nvim +UpdateRemotePlugins +qall
+
+
+- name: The silver searcher (Ag)
+  hosts: dev_box
+  tags:
+    - ag
+
+  tasks:
+    - name: Installing Ag depedencies
+      become: yes
+      apt: name={{ item }} update_cache=yes
+      with_items:
+        - automake
+        - pkg-config
+        - libpcre3-dev
+        - zlib1g-dev
+        - liblzma-dev
+
+    - name: Cloning Ag github.com/ggreer/the_silver_searcher.git to tmp directory
+      git: repo=https://github.com/ggreer/the_silver_searcher.git dest="/tmp/the_silver_searcher" update=no
+
+    - name: Building Ag
+      command: chdir=/tmp/the_silver_searcher ./build.sh
+
+    - name: Installing Ag
+      become: yes
+      make: chdir=/tmp/the_silver_searcher
+
+    - name: Creating symbolic link to Ag dotfiles
+      file: src="{{ ansible_env.HOME }}/dotfiles/ag/{{ item.src }}" dest="{{ ansible_env.HOME }}/{{ item.dest }}" state=link
+      with_items:
+        - { src: '.agrc', dest: '.agrc' }
+
+
+- name: Install python utils
+  hosts: dev_box
+  tags:
+    - py_utils
+
+  tasks:
+    - name: Installing python packages
+      become: yes
+      pip: name="{{ item }}"
+      with_items:
+        - virtualenv
+        - virtualenvwrapper
+        - ipython
+        - ipdb
+        - jedi
+        - requests
