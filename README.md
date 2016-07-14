@@ -8,14 +8,19 @@ Set up development machine instantly.
 
 
 #### Pre-requisites
-- Only for Ubuntu 16.04
+- Mandatory/Optional pre-requisites
 
+        sudo apt-get update
+
+        # Only for Ubuntu 16.04
         sudo apt-get install python python-dev
 
-- Mandatory pre-requisites
+        # Only for Ubuntu 14.04
+        sudo pip install markupsafe
 
-        sudo apt-get install git python-pip
-        pip install ansible==2.1
+        # Mandatory pre-requisites
+        sudo apt-get install git libssl-dev python-dev python-pip
+        sudo pip install ansible==2.1
 
 - Machine user should be a sudoers
 
@@ -29,6 +34,12 @@ Set up development machine instantly.
 
         cd set-me-up
         ansible-playbook -i inventory set_me_up.yml
+
+        # specific programs
+        ansible-playbook -i inventory set_me_up.yml --tags "zsh,neovim"
+
+        # available tags
+        "zsh,tmux,neovim,ag,py_utils"
 
 
 #### What's configured ?

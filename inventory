@@ -1,2 +1,2 @@
 [dev_box]
-localhost
+localhost ansible_connection=local
