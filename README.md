@@ -11,6 +11,7 @@ Set up development machine instantly.
 - Mandatory/Optional pre-requisites
 
         sudo apt-get update
+        sudo apt-get dist-upgrade
 
         # Only for Ubuntu 16.04
         sudo apt-get install python python-dev
