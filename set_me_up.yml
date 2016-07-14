@@ -125,7 +125,7 @@
 
     - name: Installing Ag
       become: yes
-      make: chdir=/tmp/the_silver_searcher
+      command: "make install chdir=/tmp/the_silver_searcher"
 
     - name: Creating symbolic link to Ag dotfiles
       file: src="{{ ansible_env.HOME }}/dotfiles/ag/{{ item.src }}" dest="{{ ansible_env.HOME }}/{{ item.dest }}" state=link
