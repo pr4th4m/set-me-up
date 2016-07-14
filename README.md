@@ -51,10 +51,14 @@ Set up development machine instantly.
 
 
 #### Post Installation
-- After development machine is configured, open `nvim` and run below command to install neovim plugins
+- Open `nvim` and run below command to install neovim plugins
 
         :PlugInstall
         :UpdateRemotePlugins
+
+- Open `tmux` and run below command to install tmux plugins
+
+        prefix + I
 
 - Make zsh default shell
 

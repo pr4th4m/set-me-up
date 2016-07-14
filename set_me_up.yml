@@ -54,6 +54,12 @@
       with_items:
         - { src: '.tmux.conf', dest: '.tmux.conf' }
 
+    - name: Creating directory for tmux plugin manager
+      file: path="{{ ansible_env.HOME }}/.tmux/plugins/tpm" state=directory
+
+    - name: Cloning tmux plugin manager github.com/tmux-plugins/tpm to user's home directory
+      git: repo=https://github.com/tmux-plugins/tpm dest="{{ ansible_env.HOME }}/.tmux/plugins/tpm" update=no
+
 
 - name: NeoVim
   hosts: dev_box
