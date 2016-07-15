@@ -13,15 +13,13 @@ Set up development machine instantly.
         sudo apt-get update
         sudo apt-get dist-upgrade
 
-        # Only for Ubuntu 16.04
-        sudo apt-get install python python-dev
+        # Mandatory pre-requisites
+        sudo apt-get install git libssl-dev python-dev python-pip
+        sudo pip install ansible==2.1
 
         # Only for Ubuntu 14.04
         sudo pip install markupsafe
 
-        # Mandatory pre-requisites
-        sudo apt-get install git libssl-dev python-dev python-pip
-        sudo pip install ansible==2.1
 
 - Machine user should be a sudoers
 
