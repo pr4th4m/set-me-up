@@ -99,9 +99,13 @@
     - name: Downloading neovim plugins manager VimPlug github.com/junegunn/vim-plug.git
       get_url: url=https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim dest="{{ ansible_env.HOME }}/.config/nvim/autoload/plug.vim"
 
-    - name: Installing neovim python package
+    - name: Installing neovim python3 package
       become: yes
       pip: name=neovim executable=pip3
+
+    - name: Installing neovim python package
+      become: yes
+      pip: name=neovim executable=pip
 
     - name: Configuring Deoplete
       shell: /usr/bin/nvim +UpdateRemotePlugins +qall
@@ -156,3 +160,11 @@
         - jedi
         - requests
         - pyflakes
+
+    - name: Creating config directory for ipython
+      file: path="{{ ansible_env.HOME }}/.ipython/profile_default" state=directory
+
+    - name: Creating symbolic link to ipython config file
+      file: src="{{ ansible_env.HOME }}/dotfiles/ipython/{{ item.src }}" dest="{{ ansible_env.HOME }}/{{ item.dest }}" state=link
+      with_items:
+        - { src: 'ipython_config.py', dest: '.ipython/profile_default/ipython_config.py' }
