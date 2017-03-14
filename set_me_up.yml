@@ -35,6 +35,7 @@
       file: src="{{ ansible_env.HOME }}/dotfiles/zsh/{{ item.src }}" dest="{{ ansible_env.HOME }}/{{ item.dest }}" state=link
       with_items:
         - { src: '.zshrc', dest: '.zshrc' }
+        - { src: '.dircolors', dest: '.dircolors' }
         - { src: 'git-prompt.sh', dest: 'git-prompt.sh' }
 
 
