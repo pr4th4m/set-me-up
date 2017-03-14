@@ -28,14 +28,13 @@
       become: yes
       apt: name=zsh update_cache=yes
 
-    - name: Cloning zsh configuration framework ZIM github.com/Eriner/zim.git to user's home directory
-      git: repo=https://github.com/Eriner/zim.git dest="{{ ansible_env.HOME }}/.zim" recursive=yes update=no
+    - name: Install zsh plugin manager (zplug)
+      shell: curl -sL zplug.sh/installer | zsh
 
     - name: Creating symbolic link to zsh dotfiles
       file: src="{{ ansible_env.HOME }}/dotfiles/zsh/{{ item.src }}" dest="{{ ansible_env.HOME }}/{{ item.dest }}" state=link
       with_items:
         - { src: '.zshrc', dest: '.zshrc' }
-        - { src: '.zimrc', dest: '.zimrc' }
         - { src: 'git-prompt.sh', dest: 'git-prompt.sh' }
 
 
