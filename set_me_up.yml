@@ -29,7 +29,7 @@
       apt: name=zsh update_cache=yes
 
     - name: Install zsh plugin manager (zplug)
-      shell: curl -sL zplug.sh/installer | zsh
+      shell: curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh| zsh
 
     - name: Creating symbolic link to zsh dotfiles
       file: src="{{ ansible_env.HOME }}/dotfiles/zsh/{{ item.src }}" dest="{{ ansible_env.HOME }}/{{ item.dest }}" state=link
@@ -155,7 +155,7 @@
       with_items:
         - virtualenv
         - virtualenvwrapper
-        - ipython
+        - ipython==5.5
         - ipdb
         - jedi
         - requests
